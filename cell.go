@@ -146,6 +146,7 @@ func (f *File) SetCellBool(sheet, axis string, value bool) {
 	} else {
 		xlsx.SheetData.Row[xAxis].C[yAxis].V = "0"
 	}
+	xlsx.SheetData.Row[xAxis].C[yAxis].F = nil
 }
 
 // GetCellValue provides a function to get formatted value from cell by given
@@ -460,6 +461,7 @@ func (f *File) SetCellInt(sheet, axis string, value int) {
 	xlsx.SheetData.Row[xAxis].C[yAxis].S = f.prepareCellStyle(xlsx, cell, xlsx.SheetData.Row[xAxis].C[yAxis].S)
 	xlsx.SheetData.Row[xAxis].C[yAxis].T = ""
 	xlsx.SheetData.Row[xAxis].C[yAxis].V = strconv.Itoa(value)
+	xlsx.SheetData.Row[xAxis].C[yAxis].F = nil
 }
 
 // prepareCellStyle provides a function to prepare style index of cell in
@@ -509,6 +511,7 @@ func (f *File) SetCellStr(sheet, axis, value string) {
 	xlsx.SheetData.Row[xAxis].C[yAxis].S = f.prepareCellStyle(xlsx, cell, xlsx.SheetData.Row[xAxis].C[yAxis].S)
 	xlsx.SheetData.Row[xAxis].C[yAxis].T = "str"
 	xlsx.SheetData.Row[xAxis].C[yAxis].V = value
+	xlsx.SheetData.Row[xAxis].C[yAxis].F = nil
 }
 
 // SetCellDefault provides a function to set string type value of a cell as
@@ -533,6 +536,7 @@ func (f *File) SetCellDefault(sheet, axis, value string) {
 	xlsx.SheetData.Row[xAxis].C[yAxis].S = f.prepareCellStyle(xlsx, cell, xlsx.SheetData.Row[xAxis].C[yAxis].S)
 	xlsx.SheetData.Row[xAxis].C[yAxis].T = ""
 	xlsx.SheetData.Row[xAxis].C[yAxis].V = value
+	xlsx.SheetData.Row[xAxis].C[yAxis].F = nil
 }
 
 // SetSheetRow writes an array to row by given worksheet name, starting
