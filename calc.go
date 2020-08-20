@@ -93,6 +93,43 @@ type formulaArg struct {
 // formulaFuncs is the type of the formula functions.
 type formulaFuncs struct{}
 
+func (f *File) CalcFormulas() error {
+	for _, sheetName := range []string{"Client version", "Formula engine"} {
+		xlsx, err := f.workSheetReader(sheetName)
+		if err != nil {
+			return fmt.Errorf("failed to read worksheet", err)
+		}
+
+		for row := 1; row <= len(xlsx.SheetData.Row); row++ {
+			for col := 1; col <= len(xlsx.SheetData.Row[row-1].C); col++ {
+
+				axis, err := CoordinatesToCellName(col, row)
+				if err != nil {
+					return fmt.Errorf("failed to generate cell name for coordinates col %d, row %d: %s", col, row, err)
+				}
+
+				formula, err := f.GetCellFormula(sheetName, axis)
+				if err != nil {
+					return fmt.Errorf("get formula from cell %q/%q: %s", sheetName, axis, err)
+				}
+
+				if formula != "" {
+					value, err := f.CalcCellValue(sheetName, "A3")
+					if err != nil {
+						return fmt.Errorf("failed calc cell value for cell %q/%q: %s", sheetName, axis, err)
+					}
+
+					if err := f.SetCellValue(sheetName, axis, value); err != nil {
+						return fmt.Errorf("failed to set value for cell %q/%q: %s", sheetName, axis, err)
+					}
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
 // CalcCellValue provides a function to get calculated cell value. This
 // feature is currently in working processing. Array formula, table formula
 // and some other formulas are not supported currently.
